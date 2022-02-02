@@ -19,6 +19,7 @@ class G : Game() {
         TestGame.instance!!.server.getPlayer(list[0])!!.sendMessage("Hello, world!")
         CoroutineScope(Dispatchers.Default).launch {
             if (TestGame.stop) {
+                TestGame.instance!!.server.getPlayer(list[0])!!.sendMessage("Wa")
                 TestGame.stop = false
                 CoroutineScope(Dispatchers.Main).launch {
                     onPlayerFailed(roomInfo, list[0])
