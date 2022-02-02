@@ -1,0 +1,15 @@
+name: TestGame
+version: '${version}'
+main: com.dayo.testgame.TestGame
+api-version: 1.16
+prefix: tg
+depend: [ SimpleGameApi ]
+authors: [ Dayo ]
+description: test game
+website: https://github.com/dayo05
+
+commands:
+  j:
+    description: join
+  l:
+    description: leave
