@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class TestGame extends JavaPlugin {
 
     public static TestGame instance;
+    public static Boolean stop = false;
     @Override
     public void onEnable() {
         instance = this;
@@ -30,6 +31,9 @@ public final class TestGame extends JavaPlugin {
         }
         else if(command.getName().equals("l")) {
             GameManager.Companion.leftPlayer(((Player)sender).getUniqueId());
+        }
+        else if(command.getName().equals("s")) {
+            stop = true;
         }
         return true;
     }

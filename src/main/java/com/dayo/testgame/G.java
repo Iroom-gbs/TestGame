@@ -14,7 +14,7 @@ public class G extends Game {
     }
 
     @Override
-    public int getMinimumPlayer() {
+    public int getPlayerCount() {
         return 1;
     }
 
@@ -26,5 +26,23 @@ public class G extends Game {
     @Override
     public void onGameStart(RoomInfo roomInfo, List<UUID> list) {
         TestGame.instance.getServer().getPlayer(list.get(0)).sendMessage("Hello, world!");
+        new Thread(() -> {
+            if(TestGame.stop) {
+                TestGame.stop = false;
+                onPlayerFailed(roomInfo, list.get(0));
+            }
+        }).start();
+    }
+
+    @Override
+    public void onPlayerFailed(RoomInfo room, UUID player) {
+        TestGame.instance.getServer().getPlayer(player).sendMessage("You Failed");
+        super.onPlayerFailed(room, player);
+    }
+
+    @Override
+    public void finish(RoomInfo room) {
+        TestGame.instance.getServer().broadcastMessage("Finish game");
+        super.finish(room);
     }
 }
