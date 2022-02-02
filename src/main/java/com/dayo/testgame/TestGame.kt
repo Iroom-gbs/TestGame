@@ -1,40 +1,43 @@
-package com.dayo.testgame;
+package com.dayo.testgame
 
-import com.dayo.simplegameapi.data.GameManager;
-import com.dayo.simplegameapi.data.RoomInfo;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import com.dayo.simplegameapi.data.GameManager.Companion.registerGame
+import com.dayo.simplegameapi.data.GameManager.Companion.joinPlayer
+import com.dayo.simplegameapi.data.GameManager.Companion.leftPlayer
+import com.dayo.simplegameapi.api.Game
+import com.dayo.simplegameapi.data.RoomInfo
+import java.util.UUID
+import com.dayo.testgame.TestGame
+import java.lang.Runnable
+import org.bukkit.plugin.java.JavaPlugin
+import com.dayo.testgame.G
+import org.bukkit.command.Command
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 
-public final class TestGame extends JavaPlugin {
-
-    public static TestGame instance;
-    public static Boolean stop = false;
-    @Override
-    public void onEnable() {
-        instance = this;
-        GameManager.Companion.registerGame(new G(), 1);
+class TestGame : JavaPlugin() {
+    override fun onEnable() {
+        instance = this
+        registerGame(G(), 1)
         // Plugin startup logic
-
     }
 
-    @Override
-    public void onDisable() {
+    override fun onDisable() {
         // Plugin shutdown logic
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(command.getName().equals("j")) {
-            GameManager.Companion.joinPlayer(((Player)sender).getUniqueId(), new RoomInfo(0, 0));
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
+        if (command.name == "j") {
+            joinPlayer((sender as Player).uniqueId, RoomInfo(0, 0))
+        } else if (command.name == "l") {
+            leftPlayer((sender as Player).uniqueId)
+        } else if (command.name == "s") {
+            stop = true
         }
-        else if(command.getName().equals("l")) {
-            GameManager.Companion.leftPlayer(((Player)sender).getUniqueId());
-        }
-        else if(command.getName().equals("s")) {
-            stop = true;
-        }
-        return true;
+        return true
+    }
+
+    companion object {
+        var instance: TestGame? = null
+        var stop = false
     }
 }
