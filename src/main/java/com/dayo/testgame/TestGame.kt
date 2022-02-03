@@ -26,12 +26,17 @@ class TestGame : JavaPlugin() {
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
-        if (command.name == "j") {
-            joinPlayer((sender as Player).uniqueId, RoomInfo(0, 0))
-        } else if (command.name == "l") {
-            leftPlayer((sender as Player).uniqueId)
-        } else if (command.name == "s") {
-            stop = true
+        when (command.name) {
+            "j" -> {
+                joinPlayer((sender as Player).uniqueId, RoomInfo(0, 0))
+            }
+            "l" -> {
+                leftPlayer((sender as Player).uniqueId)
+            }
+            "s" -> {
+                sender.sendMessage("stop")
+                stop = true
+            }
         }
         return true
     }

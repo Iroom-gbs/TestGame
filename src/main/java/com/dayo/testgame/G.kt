@@ -2,37 +2,33 @@ package com.dayo.testgame
 
 import com.dayo.simplegameapi.api.Game
 import com.dayo.simplegameapi.data.RoomInfo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.UUID
+import org.bukkit.Bukkit
+import org.bukkit.scheduler.BukkitTask
+import java.util.*
 
 class G : Game() {
-    override val id: Int
-        get() = 0
+    lateinit var task: BukkitTask
     override val playerCount: Int
         get() = 1
     override val name: String
         get() = "asdf"
 
-    override fun onGameStart(roomInfo: RoomInfo, list: List<UUID>) {
-        TestGame.instance!!.server.getPlayer(list[0])!!.sendMessage("Hello, world!")
-        CoroutineScope(Dispatchers.Default).launch {
-            while(true) {
-                if (TestGame.stop) {
-                    TestGame.instance!!.server.getPlayer(list[0])!!.sendMessage("Wa")
-                    TestGame.stop = false
-                    CoroutineScope(Dispatchers.Main).launch {
-                        onPlayerFailed(roomInfo, list[0])
-                    }
-                }
-            }
-        }
+    override fun onGameStart(room: RoomInfo, players: List<UUID>) {
+        TestGame.instance!!.server.getPlayer(players[0])!!.sendMessage("Hello, world!")
+
+        task = Bukkit.getScheduler().runTaskTimer(TestGame.instance!!, Runnable {
+             if(TestGame.stop) {
+                 TestGame.stop = false
+                 task.cancel()
+                 TestGame.instance!!.server.getPlayer(players[0])!!.sendMessage("Stop game!")
+                 playerFailed(room, players[0])
+             }
+        }, 1L, 1L)
     }
 
-    override fun onPlayerFailed(room: RoomInfo, player: UUID) {
+    override fun playerFailed(room: RoomInfo, player: UUID) {
         TestGame.instance!!.server.getPlayer(player)!!.sendMessage("You Failed")
-        super.onPlayerFailed(room, player)
+        super.playerFailed(room, player)
     }
 
     override fun finish(room: RoomInfo) {
