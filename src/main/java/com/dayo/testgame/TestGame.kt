@@ -1,10 +1,10 @@
 package com.dayo.testgame
 
-import com.dayo.simplegameapi.data.GameManager.Companion.registerGame
-import com.dayo.simplegameapi.data.GameManager.Companion.joinPlayer
-import com.dayo.simplegameapi.data.GameManager.Companion.leftPlayer
-import com.dayo.simplegameapi.api.Game
-import com.dayo.simplegameapi.data.RoomInfo
+import me.ddayo.simplegameapi.data.GameManager.Companion.registerGame
+import me.ddayo.simplegameapi.data.GameManager.Companion.joinPlayer
+import me.ddayo.simplegameapi.data.GameManager.Companion.leftPlayer
+import me.ddayo.simplegameapi.api.Game
+import me.ddayo.simplegameapi.data.RoomInfo
 import java.util.UUID
 import com.dayo.testgame.TestGame
 import java.lang.Runnable
@@ -17,7 +17,7 @@ import org.bukkit.entity.Player
 class TestGame : JavaPlugin() {
     override fun onEnable() {
         instance = this
-        registerGame(G(), 1)
+        registerGame(G(), 2)
         // Plugin startup logic
     }
 
@@ -28,7 +28,7 @@ class TestGame : JavaPlugin() {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
         when (command.name) {
             "j" -> {
-                joinPlayer((sender as Player).uniqueId, RoomInfo(0, 0))
+                joinPlayer((sender as Player).uniqueId, RoomInfo(0, args[0].toInt()))
             }
             "l" -> {
                 leftPlayer((sender as Player).uniqueId)
