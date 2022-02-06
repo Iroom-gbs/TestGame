@@ -18,15 +18,16 @@ class G : Game {
         get() = "asdf"
     override val maxPlayerCount: Int
         get() = 2
+
     lateinit var p: UUID
 
-    constructor(a: Int): super() {
+    constructor(room: RoomInfo, a: Int): super(room) {
         println(a)
     }
 
-    constructor(): super()
+    constructor(room: RoomInfo): super(room)
 
-    override fun onGameStart(room: RoomInfo, players: List<UUID>) {
+    override fun onGameStart(players: List<UUID>) {
         //TestGame.instance!!.server.getPlayer(players[0])!!.sendMessage("Hello, world!")
         players.forEach { TestGame.instance!!.server.getPlayer(it)!!.sendMessage(room.rid.toString()) }
         println("t")
@@ -38,7 +39,7 @@ class G : Game {
                 if (TestGame.stop) {
                     TestGame.stop = false
                     TestGame.instance!!.server.getPlayer(p)!!.sendMessage("Stop game!")
-                    playerFailed(room, p)
+                    playerFailed(p)
                     return@sequence
                 }
                 yield(WaitNextTick())
@@ -46,14 +47,14 @@ class G : Game {
         })
     }
 
-    override fun playerFailed(room: RoomInfo, player: UUID) {
+    override fun playerFailed(player: UUID) {
         TestGame.instance!!.server.getPlayer(player)!!.sendMessage("You Failed")
-        super.playerFailed(room, player)
+        super.playerFailed(player)
     }
 
-    override fun finish(room: RoomInfo) {
+    override fun finish() {
         TestGame.instance!!.server.broadcastMessage("Finish game")
-        super.finish(room)
+        super.finish()
         CoroutineUtil.invokeMain {
             println(GameManager.getRoomStatus(room))
         }
