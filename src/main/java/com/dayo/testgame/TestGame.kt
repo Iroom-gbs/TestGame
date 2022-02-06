@@ -17,7 +17,7 @@ import org.bukkit.entity.Player
 class TestGame : JavaPlugin() {
     override fun onEnable() {
         instance = this
-        registerGame(G(), 2)
+        registerGame(G::class.java, 999, roomSize = 2)
         // Plugin startup logic
     }
 
@@ -28,7 +28,7 @@ class TestGame : JavaPlugin() {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
         when (command.name) {
             "j" -> {
-                joinPlayer((sender as Player).uniqueId, RoomInfo(0, args[0].toInt()))
+                joinPlayer((sender as Player).uniqueId, RoomInfo(args[0].toInt(), args[1].toInt()))
             }
             "l" -> {
                 leftPlayer((sender as Player).uniqueId)

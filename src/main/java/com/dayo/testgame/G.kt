@@ -1,5 +1,7 @@
 package com.dayo.testgame
 
+import me.ddayo.coroutine.Coroutine
+import me.ddayo.coroutine.functions.WaitNextTick
 import me.ddayo.simplegameapi.api.Game
 import me.ddayo.simplegameapi.data.GameManager
 import me.ddayo.simplegameapi.data.RoomInfo
@@ -8,7 +10,7 @@ import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitTask
 import java.util.*
 
-class G : Game() {
+class G : Game {
     private lateinit var task: BukkitTask
     override val playerCount: Int
         get() = 1
@@ -17,6 +19,13 @@ class G : Game() {
     override val maxPlayerCount: Int
         get() = 2
     lateinit var p: UUID
+
+    constructor(a: Int): super() {
+        println(a)
+    }
+
+    constructor(): super()
+
     override fun onGameStart(room: RoomInfo, players: List<UUID>) {
         //TestGame.instance!!.server.getPlayer(players[0])!!.sendMessage("Hello, world!")
         players.forEach { TestGame.instance!!.server.getPlayer(it)!!.sendMessage(room.rid.toString()) }
@@ -24,14 +33,17 @@ class G : Game() {
         println(GameManager.getPlaying(players[0])?.rid)
         println(players[0])
         p = players[0]
-        task = Bukkit.getScheduler().runTaskTimer(TestGame.instance!!, Runnable {
-             if(TestGame.stop) {
-                 TestGame.stop = false
-                 task.cancel()
-                 TestGame.instance!!.server.getPlayer(p)!!.sendMessage("Stop game!")
-                 playerFailed(room, p)
-             }
-        }, 1L, 1L)
+        Coroutine.startCoroutine(sequence {
+            while(true) {
+                if (TestGame.stop) {
+                    TestGame.stop = false
+                    TestGame.instance!!.server.getPlayer(p)!!.sendMessage("Stop game!")
+                    playerFailed(room, p)
+                    return@sequence
+                }
+                yield(WaitNextTick())
+            }
+        })
     }
 
     override fun playerFailed(room: RoomInfo, player: UUID) {
