@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
-    implementation 'me.ddayo:simple-game-api:1.1'
+    implementation 'me.ddayo:simple-game-api:1.2'
 }
 
 def targetJavaVersion = 8

@@ -21,11 +21,11 @@ class G : Game {
 
     lateinit var p: UUID
 
-    constructor(room: RoomInfo, a: Int): super(room) {
+    constructor(a: Int): super() {
         println(a)
     }
 
-    constructor(room: RoomInfo): super(room)
+    constructor(): super()
 
     override fun onGameStart(players: List<UUID>) {
         //TestGame.instance!!.server.getPlayer(players[0])!!.sendMessage("Hello, world!")
